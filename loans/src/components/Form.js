@@ -2,8 +2,9 @@ import React, {Fragment, useState} from "react";
 import { calculateTotals } from "../Helper";
 
 function Form(props) {
-    const {quantity, setQuantity, term, setTerm, total, setTotal, setSpinner } = props;
+    const {quantity, setQuantity, term, setTerm, setTotal, setSpinner, setClick } = props;
     const [error, setError] = useState(false);
+    let previousQuantity, previousTerm;
 
     function calculate(e){
         e.preventDefault();
@@ -12,19 +13,39 @@ function Form(props) {
             setError(true);
             return;
         }
-    
+        
         setError(false);
         
         setSpinner(true);
-
-        setTimeout(() => {
+        
+        setTimeout(() => { // After two seconds spinner must hide the click is detected and the amount can be displayed
             setSpinner(false);
             
-            const totalConst = calculateTotals(Number(quantity), Number(term));
+            setClick(true); // Detecting click
+
+            const totalConst = calculateTotals(Number(quantity) , Number(term) );
     
             setTotal(totalConst);
-        }, 3000);        
+        }, 2000);        
 
+    }
+
+    function resetSummary(e){
+        if(e.target.localName === 'input') {
+            setQuantity(e.target.value);
+
+            if(quantity !== previousQuantity) setClick(false); // If the amount changes user must click once again
+
+            previousQuantity = e.target.value; // Saving the actual amount
+        }
+        else {
+            parseInt(setTerm(e.target.value));
+
+            if(term !== previousTerm) setClick(false); // If the amount of months changes user must click once again
+
+            previousTerm = e.target.value;
+            e.target[0].disabled = true; // Disabling first option
+        }
     }
     
     return(
@@ -33,12 +54,12 @@ function Form(props) {
                 <div className="row">
                     <div>
                         <label>Amount of Loan</label>
-                        <input className="u-full-width" type="number" placeholder="Example: 3000" onChange={(e) => setQuantity(e.target.value)} />
+                        <input className="u-full-width" type="number" min={1} placeholder="Example: 3000" onChange={(e) => resetSummary(e)} />
                     </div>
 
                     <div>
                         <label>To Pay on:</label>
-                        <select className="u-full-width" onChange={(e) => parseInt(setTerm(e.target.value))}>
+                        <select className="u-full-width" onChange={(e) => resetSummary(e)}>
                             <option value="">Select</option>
                             <option value="3">3 months</option>
                             <option value="6">6 months</option>
