@@ -54,12 +54,12 @@ function Form(props) {
                 <div className="row">
                     <div>
                         <label>Amount of Loan</label>
-                        <input className="u-full-width" type="number" min={1} placeholder="Example: 3000" onChange={(e) => resetSummary(e)} />
+                        <input data-cy="amount" className="u-full-width" type="number" min={1} placeholder="Example: 3000" onChange={(e) => resetSummary(e)} />
                     </div>
 
                     <div>
                         <label>To Pay on:</label>
-                        <select className="u-full-width" onChange={(e) => resetSummary(e)}>
+                        <select data-cy="select-month" className="u-full-width" onChange={(e) => resetSummary(e)}>
                             <option value="">Select</option>
                             <option value="3">3 months</option>
                             <option value="6">6 months</option>
@@ -69,12 +69,12 @@ function Form(props) {
                     </div>
 
                     <div>
-                        <input type="submit" value="Calculate" className="button-primary u-full-width" />
+                        <input data-cy="btn-submit" type="submit" value="Calculate" className="button-primary u-full-width" />
                     </div>
                 </div>
             </form>
 
-            {(error) ? <p className="error">All fields are required</p> : null}
+            {(error) ? <p data-cy="error-message" className="error">All fields are required</p> : null}
         </Fragment>
     );
 }
